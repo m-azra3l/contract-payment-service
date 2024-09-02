@@ -1,85 +1,231 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Contract and Payment Service Application
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This application is a **Contract and Payment Service** built with NestJS, Prisma, and PostgreSQL. It manages profiles, contracts, and jobs, focusing on efficient handling of transactions, concurrency, and adherence to best practices in software development.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Table of Contents
 
-## Description
+- [Contract and Payment Service Application](#contract-and-payment-service-application)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+  - [Installation](#installation)
+  - [Database Setup](#database-setup)
+  - [Seeding the Database](#seeding-the-database)
+  - [Running the Application](#running-the-application)
+  - [Testing](#testing)
+    - [Unit Tests](#unit-tests)
+    - [End-to-End (E2E) Tests](#end-to-end-e2e-tests)
+  - [API Documentation](#api-documentation)
+  - [Technologies Used](#technologies-used)
+  - [Project Structure](#project-structure)
+  - [Reference](#reference)
+  - [Author](#author)
+  - [License](#license)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Features
 
-## Project setup
+- **Profile Management**: Manages client and contractor profiles.
+- **Contract and Job Management**: Handles contracts between clients and contractors, and tracks jobs associated with contracts.
+- **Payment Processing**: Manages payments for jobs, ensuring transaction safety and handling race conditions.
+- **Admin Functionality**: Provides admin APIs to retrieve the best profession and best clients based on earnings.
+- **Authentication**: Basic authentication using middleware to verify `profile-id` from headers.
+
+## Installation
+
+1. **Clone the Repository**:
+
+   ```bash
+   git clone https://github.com/m-azra3l/contract-payment-service.git
+   cd contract-payment-service
+   ```
+
+2. **Install Dependencies**:
+
+   Make sure you have [Node.js](https://nodejs.org/) installed, then run:
+
+   ```bash
+   yarn install
+   ```
+
+3. **Set Up Environment Variables**:
+
+   Create a `.env` file in the root directory and configure your database connection:
+
+   ```env
+   DATABASE_URL="postgresql://username:password@localhost:5432/contract_payment"
+   PORT=3000
+   ```
+
+## Database Setup
+
+1. **Prisma Migrations**:
+
+   Run Prisma migrations to set up your database schema:
+
+   ```bash
+   npx prisma migrate dev --name init
+   ```
+
+2. **Prisma Client**:
+
+   Generate the Prisma Client to interact with your database:
+
+   ```bash
+   npx prisma generate
+   ```
+
+## Seeding the Database
+
+The application includes a seed script to populate the database with initial data:
+
+1. **Run the Seed Script**:
+
+   ```bash
+   yarn seed
+   ```
+
+   This script creates 4 clients and 4 contractors, each with associated contracts and jobs.
+
+## Running the Application
+
+Start the application by running:
 
 ```bash
-$ yarn install
+yarn start
 ```
 
-## Compile and run the project
+The server will start on the port specified in your `.env` file (`5000` by default).
+
+## Testing
+
+### Unit Tests
+
+To run unit tests, use:
 
 ```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+yarn test
 ```
 
-## Run tests
+### End-to-End (E2E) Tests
+
+To run E2E tests, use:
 
 ```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+yarn test:e2e
 ```
 
-## Resources
+These tests cover the major functionalities, ensuring that each part of the application works correctly in isolation (unit tests) and as a whole (E2E tests).
 
-Check out a few resources that may come in handy when working with NestJS:
+## API Documentation
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Swagger is used to document the API. Once the application is running, you can access the API documentation at:
 
-## Support
+```
+http://localhost:5000/api-docs
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Technologies Used
 
-## Stay in touch
+- **NestJS**: A progressive Node.js framework for building efficient, reliable, and scalable server-side applications.
+- **Prisma**: An ORM that helps manage data in databases with ease and efficiency.
+- **PostgreSQL**: A powerful, open-source object-relational database system.
+- **Swagger**: API documentation made easy.
+- **Jest**: Testing framework for unit and E2E tests.
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Project Structure
+
+```
+contract-payment-service/
+│
+├── prisma/
+|   ├── migrations/
+│   ├── schema.prisma
+│   ├── seed.ts
+|
+├── src/
+│   ├── admin/
+│   │   ├── admin.controller.ts
+│   │   ├── admin.module.ts 
+│   │   ├── admin.service.ts
+│   ├── app/
+|   |   ├── app.controller.ts
+│   |   ├── app.module.ts
+│   |   ├── app.service.ts
+│   ├── auth/
+│   │   ├── auth.controller.ts
+│   │   ├── auth.middleware.ts
+|   |   ├── auth.module.ts
+│   ├── balances/
+│   │   ├── balances.controller.ts
+│   │   ├── balances.module.ts
+│   │   ├── balances.service.ts
+│   ├── config/
+│   │   ├── app.config.ts
+│   ├── contracts/
+│   │   ├── contracts.controller.ts
+│   │   ├── contracts.module.ts
+│   │   ├── contracts.service.ts
+│   │   ├── dto/
+│   │   ├── entities/
+│   ├── jobs/
+│   │   ├── jobs.controller.ts
+│   │   ├── jobs.module.ts
+│   │   ├── jobs.service.ts
+│   ├── prisma/
+│   │   ├── prisma.module.ts
+│   │   ├── prisma.service.ts
+│   ├── main.ts
+|
+├── test/
+│   ├── admin/
+|   |   ├── admin.controller.spec.ts
+|   |   ├── admin.e2e-specs.ts
+|   |   ├── admin.service.ts
+│   ├── app/
+|   |   ├── app.controller.spec.ts
+|   |   ├── app.e2e-spec.ts
+│   ├── auth/
+|   |   ├── auth.e2e-spec.ts
+|   |   ├── auth.middleware.spec.ts
+│   ├── balances/
+│   │   ├── balances.controller.spec.ts
+│   │   ├── balances.e2e-spec.ts
+│   │   ├── balances.service.spec.ts
+│   ├── contracts/
+│   │   ├── contracts.controller.spec.ts
+│   │   ├── contracts.e2e-spec.ts
+│   │   ├── contracts.service.spec.ts
+│   ├── jobs/
+│   │   ├── jobs.controller.spec.ts
+│   │   ├── jobs.e2e-spec.ts
+│   │   ├── jobs.service.spec.ts
+│   ├── prisma/
+│   │   ├── prisma.e2e-spec.ts
+│   │   ├── prisma.service.spec.ts
+|   ├── jest-e2e.json
+│
+├── .env(ignored)
+├── .eslintrc.js
+├── .gitignore
+├── .prettierrc
+├── Backend Engineer - Coding Exercise.pdf
+├── jest.config.js
+├── LICENSE
+├── nest-cli.json
+├── package.json
+├── README.md
+├── tsconfig.build.json
+├── tsconfig.json
+├── yarn.lock(ignored)
+```
+
+## Reference
+
+This application was built as part of a coding exercise. For more details on the requirements and design, please refer to the provided document: **[Backend Engineer - Coding Exercise](./[Backend%20Engineer%20-%20Coding%20Exercise.pdf](https://github.com/m-azra3l/contract-payment-service/blob/main/Backend%20Engineer%20-%20%20Coding%20Exercise.pdf))**.
+
+## Author
+
+- [Michael Damilare Adesina](https://github.com/m-azra3l)
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
