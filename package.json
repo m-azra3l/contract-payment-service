@@ -8,6 +8,7 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "seed": "ts-node prisma/seed.ts",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
@@ -28,7 +29,8 @@
     "@prisma/client": "^5.19.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
