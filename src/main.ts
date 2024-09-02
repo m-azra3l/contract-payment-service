@@ -11,10 +11,12 @@ async function bootstrap() {
     .setDescription('API documentation for the Contract Payment Service')
     .setVersion('1.0')
     .addBearerAuth()
+    .addServer('http://localhost:3000', 'Development server')
+    .addServer('https://to-be-specified', 'Production server')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document);
+  SwaggerModule.setup('api-docs', app, document);
 
   await app.listen(3000);
 }
