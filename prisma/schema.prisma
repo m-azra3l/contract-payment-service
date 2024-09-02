@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ProfileRole {
+  client
+  contractor
+}
+
+enum ContractStatus {
+  new
+  in_progress
+  terminated
+}
+
+model Profile {
+  id         Int        @id @default(autoincrement())
+  uuid       String     @unique
+  firstName  String
+  lastName   String
+  profession String
+  balance    Decimal    @default(0.0)
+  role       ProfileRole
+  contracts  Contract[] @relation("ClientContracts")
+  jobs       Job[]      @relation("ContractorJobs")
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  Contract Contract[] @relation("ContractorJobs")
+}
+
+model Contract {
+  id          Int         @id @default(autoincrement())
+  uuid        String      @unique
+  terms       String
+  status      ContractStatus
+  contractor  Profile     @relation("ContractorJobs", fields: [contractorId], references: [id])
+  contractorId Int
+  client      Profile     @relation("ClientContracts", fields: [clientId], references: [id])
+  clientId    Int
+  jobs        Job[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Job {
+  id        Int      @id @default(autoincrement())
+  uuid      String   @unique
+  description String
+  price     Decimal
+  isPaid    Boolean  @default(false)
+  paidDate  DateTime?
+  contract  Contract @relation(fields: [contractId], references: [id])
+  contractId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Profile Profile[] @relation("ContractorJobs")
+}
