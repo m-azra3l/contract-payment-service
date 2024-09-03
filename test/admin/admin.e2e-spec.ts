@@ -24,24 +24,22 @@ describe('Admin (e2e)', () => {
   });
 
   it('should get the best profession', async () => {
-    jest.spyOn(prisma.job, 'groupBy').mockResolvedValue([
+    jest.spyOn(prisma, '$queryRaw').mockResolvedValue([
       {
         contractorId: 1,
-        _sum: {
-          price: 1000,
-        },
+        total: 1000,
       },
     ] as any);
 
-    jest
-      .spyOn(prisma.profile, 'findUnique')
-      .mockResolvedValue({ profession: 'Developer' } as any);
+    jest.spyOn(prisma.profile, 'findUnique').mockResolvedValue({
+      profession: 'Developer',
+    } as any);
 
     const response = await request(app.getHttpServer())
       .get('/admin/best-profession?start=2024-01-01&end=2024-12-31')
       .expect(200);
 
-    expect(response.text).toBe('Developer');
+    expect(response.body).toEqual({ profession: 'Developer' });
   });
 
   it('should get the best clients', async () => {
