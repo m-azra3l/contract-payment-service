@@ -44,9 +44,22 @@ describe('Admin (e2e)', () => {
 
   it('should get the best clients', async () => {
     const mockClients = [
-      { id: 1, firstName: 'Alice', jobs: [{ price: 100 }] },
-      { id: 2, firstName: 'Bob', jobs: [{ price: 200 }] },
+      {
+        id: 1,
+        firstName: 'Alice',
+        lastName: 'Wonder',
+        role: 'client',
+        jobs: [{ price: 100 }],
+      },
+      {
+        id: 2,
+        firstName: 'Bob',
+        lastName: 'Builder',
+        role: 'client',
+        jobs: [{ price: 200 }],
+      },
     ];
+
     jest
       .spyOn(prisma.profile, 'findMany')
       .mockResolvedValue(mockClients as any);
@@ -55,6 +68,27 @@ describe('Admin (e2e)', () => {
       .get('/admin/best-clients?start=2024-01-01&end=2024-12-31&limit=2')
       .expect(200);
 
-    expect(response.body).toEqual(mockClients);
+    const expectedClients = [
+      {
+        id: 2,
+        firstName: 'Bob',
+        lastName: 'Builder',
+        role: 'client',
+        totalPaid: 200,
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String),
+      },
+      {
+        id: 1,
+        firstName: 'Alice',
+        lastName: 'Wonder',
+        role: 'client',
+        totalPaid: 100,
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String),
+      },
+    ];
+
+    expect(response.body).toEqual(expectedClients);
   });
 });

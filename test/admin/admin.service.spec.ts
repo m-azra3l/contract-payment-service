@@ -15,30 +15,65 @@ describe('AdminService', () => {
     prisma = module.get<PrismaService>(PrismaService);
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
 
   describe('getBestProfession', () => {
-    it('should return null if no profession is found within the date range', async () => {
-      jest.spyOn(prisma.job, 'groupBy').mockResolvedValue([]);
+    it('should return the best profession when results are found', async () => {
+      const mockResult = [{ contractorId: 1, total: 1000 }];
 
-      const result = await service.getBestProfession(new Date(), new Date());
-      expect(result).toBeNull();
-    });
+      const mockProfile = { profession: 'Developer' };
 
-    it('should return the best profession', async () => {
-      const mockGroupByResult = [{ contractorId: 1, _sum: { price: 1000 } }];
-      const mockContractor = { profession: 'Developer' };
-      jest
-        .spyOn(prisma.job, 'groupBy')
-        .mockResolvedValue(mockGroupByResult as any);
+      jest.spyOn(prisma, '$queryRaw').mockResolvedValue(mockResult);
       jest
         .spyOn(prisma.profile, 'findUnique')
-        .mockResolvedValue(mockContractor as any);
+        .mockResolvedValue(mockProfile as any);
 
-      const result = await service.getBestProfession(new Date(), new Date());
-      expect(result).toBe('Developer');
+      const result = await service.getBestProfession(
+        new Date('2024-01-01'),
+        new Date('2024-12-31'),
+      );
+
+      expect(result).toEqual({ profession: 'Developer' });
+      expect(prisma.$queryRaw).toHaveBeenCalledTimes(1);
+      expect(prisma.profile.findUnique).toHaveBeenCalledWith({
+        where: { id: 1 },
+      });
+    });
+
+    it('should return null when no results are found', async () => {
+      jest.spyOn(prisma, '$queryRaw').mockResolvedValue([]);
+      const result = await service.getBestProfession(
+        new Date('2024-01-01'),
+        new Date('2024-12-31'),
+      );
+
+      expect(result).toBeNull();
+      expect(prisma.$queryRaw).toHaveBeenCalledTimes(1);
+      expect(prisma.profile.findUnique).not.toHaveBeenCalled();
+    });
+
+    it('should return null when the contractor is not found', async () => {
+      const mockResult = [{ contractorId: 1, total: 1000 }];
+
+      jest.spyOn(prisma, '$queryRaw').mockResolvedValue(mockResult);
+      jest.spyOn(prisma.profile, 'findUnique').mockResolvedValue(null);
+
+      const result = await service.getBestProfession(
+        new Date('2024-01-01'),
+        new Date('2024-12-31'),
+      );
+
+      expect(result).toEqual({ profession: null });
+      expect(prisma.$queryRaw).toHaveBeenCalledTimes(1);
+      expect(prisma.profile.findUnique).toHaveBeenCalledWith({
+        where: { id: 1 },
+      });
     });
   });
 

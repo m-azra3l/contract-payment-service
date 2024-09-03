@@ -14,10 +14,11 @@ export class AdminService {
   // Use raw query due to cyclic error
   async getBestProfession(start: Date, end: Date): Promise<object> {
     const result = await this.prisma.$queryRaw<BestProfessionResult[]>`
-      SELECT "contractorId", SUM("price") as total
-      FROM "Job"
-      WHERE "paidDate" BETWEEN ${start} AND ${end}
-      GROUP BY "contractorId"
+      SELECT c."contractorId", SUM(j."price") as total
+      FROM "Job" j
+      JOIN "Contract" c ON j."contractId" = c."id"
+      WHERE j."paidDate" BETWEEN ${start} AND ${end}
+      GROUP BY c."contractorId"
       ORDER BY total DESC
       LIMIT 1
     `;
