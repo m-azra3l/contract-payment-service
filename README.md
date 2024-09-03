@@ -229,7 +229,7 @@ This application was built as part of a coding exercise. For more details on the
 
 ## Author
 
-- [Michael Damilare Adesina](https://github.com/m-azra3l)
+- [Michael](https://github.com/m-azra3l)
 
 ## License
 
