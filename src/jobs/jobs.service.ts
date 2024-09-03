@@ -88,7 +88,7 @@ export class JobsService {
       price: job.price,
       isPaid: job.isPaid,
       contractId: job.contractId,
-      contractStatus: job.contract.status,
+      contractStatus: job.contract?.status || 'unknown',
       clientName: `${job.contract.client.firstName} ${job.contract.client.lastName}`,
       contractorName: `${job.contract.contractor.firstName} ${job.contract.contractor.lastName}`,
       createdAt: job.createdAt,
