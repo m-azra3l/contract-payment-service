@@ -2,6 +2,7 @@ import { Controller, Get, Param, Req } from '@nestjs/common';
 import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ContractsService } from './contracts.service';
 import { Request } from 'express';
+import { GetContractDto } from './dto/get-contract.dto';
 
 @ApiTags('Contracts')
 @ApiHeader({
@@ -15,7 +16,11 @@ export class ContractsController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get contract by ID' })
-  @ApiResponse({ status: 200, description: 'Contract retrieved successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Contract retrieved successfully',
+    type: GetContractDto,
+  })
   @ApiResponse({ status: 404, description: 'Contract not found' })
   async getContractById(@Param('id') id: string, @Req() req: Request) {
     const profileId = Number(req.headers['profile-id']);
@@ -27,6 +32,7 @@ export class ContractsController {
   @ApiResponse({
     status: 200,
     description: 'Active contracts retrieved successfully',
+    type: [GetContractDto],
   })
   async getActiveContracts(@Req() req: Request) {
     const profileId = Number(req.headers['profile-id']);
