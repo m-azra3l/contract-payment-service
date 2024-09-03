@@ -10,6 +10,7 @@ import {
 import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JobsService } from './jobs.service';
 import { Request } from 'express';
+import { GetUnpaidJobsDto } from './dto/get-unpaid-jobs.dto';
 
 @ApiTags('Jobs')
 @ApiHeader({
@@ -26,6 +27,7 @@ export class JobsController {
   @ApiResponse({
     status: 200,
     description: 'Unpaid jobs retrieved successfully',
+    type: [GetUnpaidJobsDto],
   })
   async getUnpaidJobs(@Req() req: Request) {
     const profileId = Number(req.headers['profile-id']);
