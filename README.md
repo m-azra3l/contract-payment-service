@@ -26,8 +26,8 @@ This application is a **Contract and Payment Service** built with NestJS, Prisma
 - **Profile Management**: Manages client and contractor profiles.
 - **Contract and Job Management**: Handles contracts between clients and contractors, and tracks jobs associated with contracts.
 - **Payment Processing**: Manages payments for jobs, ensuring transaction safety and handling race conditions.
-- **Admin Functionality**: Provides admin APIs to retrieve the best profession and best clients based on earnings.
-- **Authentication**: Basic authentication using middleware to verify `profile-id` from headers.
+- **Admin Functionality**: Provides admin APIs to retrieve the best profession and best clients based on earnings. _Note: Admin routes are excluded from the standard authentication middleware._
+- **Authentication**: Basic authentication using middleware to verify `profile-id` from headers (except for admin routes).
 
 ## Installation
 
