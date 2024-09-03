@@ -26,8 +26,32 @@ describe('Jobs (e2e)', () => {
   it('should get unpaid jobs successfully', async () => {
     const userId = 1;
     const mockJobs = [
-      { id: 1, isPaid: false },
-      { id: 2, isPaid: false },
+      {
+        id: 1,
+        uuid: 'uuid-1',
+        description: 'Job 1',
+        price: 100,
+        isPaid: false,
+        contractId: 1,
+        contractStatus: 'in_progress',
+        clientName: 'John Doe',
+        contractorName: 'Jane Doe',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: 2,
+        uuid: 'uuid-2',
+        description: 'Job 2',
+        price: 200,
+        isPaid: false,
+        contractId: 2,
+        contractStatus: 'in_progress',
+        clientName: 'Alice Smith',
+        contractorName: 'Bob Brown',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
     ];
 
     jest.spyOn(prisma.job, 'findMany').mockResolvedValue(mockJobs as any);
@@ -45,15 +69,23 @@ describe('Jobs (e2e)', () => {
     const userId = 1;
 
     jest.spyOn(prisma.job, 'findUnique').mockResolvedValue({
-      id: jobId,
+      id: 1,
       isPaid: false,
       price: 100,
-      contract: { clientId: userId, contractorId: 2 },
+      contract: {
+        clientId: userId,
+        contractorId: 2,
+      },
+    } as any);
+
+    jest.spyOn(prisma.profile, 'findUnique').mockResolvedValue({
+      id: userId,
+      balance: 200,
     } as any);
 
     await request(app.getHttpServer())
       .post(`/jobs/${jobId}/pay`)
       .set('profile-id', `${userId}`)
-      .expect(204); // No Content
+      .expect(204);
   });
 });
