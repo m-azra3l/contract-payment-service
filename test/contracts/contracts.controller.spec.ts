@@ -30,7 +30,7 @@ describe('ContractsController', () => {
 
       const req = { headers: { 'profile-id': '1' } } as any;
       await expect(controller.getContractById('1', req)).rejects.toThrow(
-        NotFoundException
+        NotFoundException,
       );
     });
 

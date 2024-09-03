@@ -38,7 +38,7 @@ describe('JobsService', () => {
       const mockJob = {
         isPaid: false,
         price: 100,
-        contract: { clientId: 1, contractorId: 2 },
+        contract: { clientId: 1, contractorId: 5 },
       } as any;
       const mockProfile = { balance: 50 } as any;
       jest.spyOn(prisma.job, 'findUnique').mockResolvedValue(mockJob);
@@ -52,7 +52,7 @@ describe('JobsService', () => {
         id: 1,
         isPaid: false,
         price: 100,
-        contract: { clientId: 1, contractorId: 2 },
+        contract: { clientId: 1, contractorId: 5 },
       } as any;
       const mockProfileClient = { id: 1, balance: 150 } as any;
       const mockProfileContractor = { id: 2, balance: 50 } as any;

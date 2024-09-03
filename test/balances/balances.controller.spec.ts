@@ -27,7 +27,7 @@ describe('BalancesController', () => {
       const req = { headers: { 'profile-id': '1' } } as any;
 
       await expect(
-        controller.deposit('2', { amount: 50 }, req)
+        controller.deposit('2', { amount: 50 }, req),
       ).rejects.toThrow(ForbiddenException);
     });
 
@@ -38,7 +38,7 @@ describe('BalancesController', () => {
         .mockResolvedValue({ balance: 150 } as any);
 
       await expect(
-        controller.deposit('1', { amount: 50 }, req)
+        controller.deposit('1', { amount: 50 }, req),
       ).resolves.not.toThrow();
     });
   });

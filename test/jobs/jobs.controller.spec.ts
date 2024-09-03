@@ -3,6 +3,8 @@ import { JobsController } from '../../src/jobs/jobs.controller';
 import { JobsService } from '../../src/jobs/jobs.service';
 import { PrismaService } from '../../src/prisma/prisma.service';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
+import { Decimal } from '@prisma/client/runtime/library';
+import { Job } from '@prisma/client';
 
 describe('JobsController', () => {
   let controller: JobsController;
@@ -24,9 +26,29 @@ describe('JobsController', () => {
 
   describe('getUnpaidJobs', () => {
     it('should return unpaid jobs for the authenticated user', async () => {
-      const mockJobs = [
-        { id: 1, isPaid: false },
-        { id: 2, isPaid: false },
+      const mockJobs: Job[] = [
+        {
+          id: 1,
+          uuid: 'uuid-1',
+          description: 'Mock job 1',
+          price: new Decimal('100'),
+          isPaid: false,
+          paidDate: undefined,
+          contractId: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: 2,
+          uuid: 'uuid-2',
+          description: 'Mock job 2',
+          price: new Decimal('200'),
+          isPaid: false,
+          paidDate: undefined,
+          contractId: 2,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
       ];
       jest.spyOn(service, 'getUnpaidJobs').mockResolvedValue(mockJobs);
 

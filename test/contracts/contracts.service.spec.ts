@@ -25,7 +25,7 @@ describe('ContractsService', () => {
       jest.spyOn(prisma.contract, 'findFirst').mockResolvedValue(null);
 
       await expect(service.getContractById(1, 1)).rejects.toThrow(
-        NotFoundException
+        NotFoundException,
       );
     });
 
@@ -33,7 +33,7 @@ describe('ContractsService', () => {
       const mockContract = {
         id: 1,
         clientId: 1,
-        contractorId: 2,
+        contractorId: 5,
         status: 'in_progress',
       };
       jest
@@ -48,8 +48,8 @@ describe('ContractsService', () => {
   describe('getActiveContracts', () => {
     it('should return active contracts associated with the user', async () => {
       const mockContracts = [
-        { id: 1, clientId: 1, contractorId: 2, status: 'in_progress' },
-        { id: 2, clientId: 1, contractorId: 3, status: 'in_progress' },
+        { id: 1, clientId: 1, contractorId: 5, status: 'in_progress' },
+        { id: 2, clientId: 2, contractorId: 6, status: 'in_progress' },
       ];
       jest
         .spyOn(prisma.contract, 'findMany')

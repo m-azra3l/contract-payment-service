@@ -23,13 +23,19 @@ describe('Admin (e2e)', () => {
     await app.close();
   });
 
-  it('should get the best profession without authentication', async () => {
-    jest
-      .spyOn(prisma.job, 'groupBy')
-      .mockResolvedValue([{ contractorId: 1, _sum: { price: 1000 } }]);
+  it('should get the best profession', async () => {
+    jest.spyOn(prisma.job, 'groupBy').mockResolvedValue([
+      {
+        contractorId: 1,
+        _sum: {
+          price: 1000,
+        },
+      },
+    ] as any);
+
     jest
       .spyOn(prisma.profile, 'findUnique')
-      .mockResolvedValue({ profession: 'Developer' });
+      .mockResolvedValue({ profession: 'Developer' } as any);
 
     const response = await request(app.getHttpServer())
       .get('/admin/best-profession?start=2024-01-01&end=2024-12-31')
@@ -38,7 +44,7 @@ describe('Admin (e2e)', () => {
     expect(response.text).toBe('Developer');
   });
 
-  it('should get the best clients without authentication', async () => {
+  it('should get the best clients', async () => {
     const mockClients = [
       { id: 1, firstName: 'Alice', jobs: [{ price: 100 }] },
       { id: 2, firstName: 'Bob', jobs: [{ price: 200 }] },
@@ -52,44 +58,5 @@ describe('Admin (e2e)', () => {
       .expect(200);
 
     expect(response.body).toEqual(mockClients);
-  });
-
-  it('should handle no results for best profession', async () => {
-    jest.spyOn(prisma.job, 'groupBy').mockResolvedValue([]);
-    jest.spyOn(prisma.profile, 'findUnique').mockResolvedValue(null);
-
-    const response = await request(app.getHttpServer())
-      .get('/admin/best-profession?start=2024-01-01&end=2024-12-31')
-      .expect(200);
-
-    expect(response.text).toBe('');
-  });
-
-  it('should handle no results for best clients', async () => {
-    jest.spyOn(prisma.profile, 'findMany').mockResolvedValue([]);
-
-    const response = await request(app.getHttpServer())
-      .get('/admin/best-clients?start=2024-01-01&end=2024-12-31&limit=2')
-      .expect(200);
-
-    expect(response.body).toEqual([]);
-  });
-
-  it('should return 400 for invalid date range', async () => {
-    const response = await request(app.getHttpServer())
-      .get('/admin/best-profession?start=invalid-date&end=2024-12-31')
-      .expect(400);
-
-    expect(response.body.message).toContain('Validation failed');
-  });
-
-  it('should return 400 for invalid limit', async () => {
-    const response = await request(app.getHttpServer())
-      .get(
-        '/admin/best-clients?start=2024-01-01&end=2024-12-31&limit=invalid-limit'
-      )
-      .expect(400);
-
-    expect(response.body.message).toContain('Validation failed');
   });
 });

@@ -43,8 +43,8 @@ describe('Contracts (e2e)', () => {
   it('should get active contracts successfully', async () => {
     const userId = 1;
     const mockContracts = [
-      { id: 1, clientId: userId, contractorId: 2, status: 'in_progress' },
-      { id: 2, clientId: userId, contractorId: 3, status: 'in_progress' },
+      { id: 1, clientId: userId, contractorId: 5, status: 'in_progress' },
+      { id: 2, clientId: userId, contractorId: 6, status: 'in_progress' },
     ];
 
     jest

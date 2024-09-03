@@ -6,7 +6,7 @@ export class AdminService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getBestProfession(start: Date, end: Date) {
-    const result = await this.prisma.job.groupBy({
+    const result = (await this.prisma.job.groupBy({
       by: ['contractorId'],
       where: {
         paidDate: {
@@ -23,7 +23,7 @@ export class AdminService {
         },
       },
       take: 1,
-    });
+    })) as any;
 
     if (result.length === 0) return null;
 
@@ -31,12 +31,13 @@ export class AdminService {
       where: { id: result[0].contractorId },
     });
 
-    return bestContractor?.profession;
+    return bestContractor?.profession || null;
   }
 
   async getBestClients(start: Date, end: Date, limit: number) {
-    return this.prisma.profile.findMany({
+    const clientsWithJobSums = await this.prisma.profile.findMany({
       where: {
+        role: 'client',
         jobs: {
           some: {
             paidDate: {
@@ -48,19 +49,31 @@ export class AdminService {
       },
       include: {
         jobs: {
+          where: {
+            paidDate: {
+              gte: start,
+              lte: end,
+            },
+          },
           select: {
             price: true,
           },
         },
       },
-      orderBy: {
-        jobs: {
-          _sum: {
-            price: 'desc',
-          },
-        },
-      },
-      take: limit,
     });
+
+    const clientsWithTotalPayments = clientsWithJobSums.map((client) => ({
+      ...client,
+      totalPaid: client.jobs.reduce(
+        (sum, job) => sum + job.price.toNumber(),
+        0,
+      ),
+    }));
+
+    const sortedClients = clientsWithTotalPayments.sort(
+      (a, b) => b.totalPaid - a.totalPaid,
+    );
+
+    return sortedClients.slice(0, limit);
   }
 }
