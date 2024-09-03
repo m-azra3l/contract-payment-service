@@ -33,7 +33,7 @@ export class AdminController {
   })
   async getBestProfession(
     @Query('start') start: string,
-    @Query('end') end: string
+    @Query('end') end: string,
   ): Promise<object> {
     const startDate = new Date(start);
     const endDate = new Date(end);
@@ -52,7 +52,7 @@ export class AdminController {
   async getBestClients(
     @Query('start') start: string,
     @Query('end') end: string,
-    @Query('limit') limit: string = '2'
+    @Query('limit') limit: string = '2',
   ): Promise<BestClientDto[]> {
     const startDate = new Date(start);
     const endDate = new Date(end);
