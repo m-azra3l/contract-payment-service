@@ -8,11 +8,21 @@ import {
   HttpStatus,
   ForbiddenException,
 } from '@nestjs/common';
-import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiHeader,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  ApiProperty,
+} from '@nestjs/swagger';
 import { BalancesService } from './balances.service';
 import { Request } from 'express';
 
 class DepositDto {
+  @ApiProperty({
+    description: 'The amount of money to deposit',
+    example: 100,
+  })
   amount: number;
 }
 
