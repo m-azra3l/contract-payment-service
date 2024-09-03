@@ -143,6 +143,7 @@ contract-payment-service/
 |
 ├── src/
 │   ├── admin/
+│   │   ├── dto/
 │   │   ├── admin.controller.ts
 │   │   ├── admin.module.ts 
 │   │   ├── admin.service.ts
@@ -151,9 +152,10 @@ contract-payment-service/
 │   |   ├── app.module.ts
 │   |   ├── app.service.ts
 │   ├── auth/
+│   │   ├── dto/
+|   │   │   ├── get-profile.dto.ts
 │   │   ├── auth.controller.ts
 │   │   ├── auth.middleware.ts
-|   |   ├── auth.module.ts
 │   ├── balances/
 │   │   ├── balances.controller.ts
 │   │   ├── balances.module.ts
@@ -161,12 +163,14 @@ contract-payment-service/
 │   ├── config/
 │   │   ├── app.config.ts
 │   ├── contracts/
+│   │   ├── dto/
+|   │   │   ├── get-contract.dto.ts
 │   │   ├── contracts.controller.ts
 │   │   ├── contracts.module.ts
 │   │   ├── contracts.service.ts
-│   │   ├── dto/
-│   │   ├── entities/
 │   ├── jobs/
+│   │   ├── dto/
+|   │   │   ├── get-unpaid-jobs.dto.ts
 │   │   ├── jobs.controller.ts
 │   │   ├── jobs.module.ts
 │   │   ├── jobs.service.ts
