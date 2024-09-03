@@ -2,10 +2,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { AppModule } from '../../src/app/app.module';
 import { PrismaService } from '../../src/prisma/prisma.service';
+import { v4 as uuidv4 } from 'uuid';
 
 describe('PrismaService (e2e)', () => {
   let app: INestApplication;
   let prisma: PrismaService;
+  let testUuid: string;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -14,11 +16,13 @@ describe('PrismaService (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     prisma = app.get<PrismaService>(PrismaService);
+    testUuid = uuidv4(); // Generate a unique UUID for the test
 
     await app.init();
   });
 
   afterAll(async () => {
+    await prisma.profile.deleteMany({ where: { uuid: testUuid } }); // Clean up after tests
     await prisma.$disconnect();
     await app.close();
   });
@@ -30,7 +34,7 @@ describe('PrismaService (e2e)', () => {
   it('should create and retrieve a record', async () => {
     const createdProfile = await prisma.profile.create({
       data: {
-        uuid: '1234-5678',
+        uuid: testUuid,
         firstName: 'John',
         lastName: 'Doe',
         profession: 'Developer',
@@ -42,10 +46,10 @@ describe('PrismaService (e2e)', () => {
     });
 
     expect(createdProfile).toBeDefined();
-    expect(createdProfile.uuid).toBe('1234-5678');
+    expect(createdProfile.uuid).toBe(testUuid);
 
     const retrievedProfile = await prisma.profile.findUnique({
-      where: { uuid: '1234-5678' },
+      where: { uuid: testUuid },
     });
 
     expect(retrievedProfile).toBeDefined();
@@ -54,20 +58,20 @@ describe('PrismaService (e2e)', () => {
 
   it('should update and delete a record', async () => {
     const updatedProfile = await prisma.profile.update({
-      where: { uuid: '1234-5678' },
+      where: { uuid: testUuid },
       data: { balance: 2000 },
     });
 
-    expect(updatedProfile.balance).toBe(2000);
+    expect(Number(updatedProfile.balance)).toBe(2000);
 
     const deletedProfile = await prisma.profile.delete({
-      where: { uuid: '1234-5678' },
+      where: { uuid: testUuid },
     });
 
     expect(deletedProfile).toBeDefined();
 
     const nonExistentProfile = await prisma.profile.findUnique({
-      where: { uuid: '1234-5678' },
+      where: { uuid: testUuid },
     });
 
     expect(nonExistentProfile).toBeNull();
