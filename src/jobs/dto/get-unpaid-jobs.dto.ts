@@ -22,7 +22,7 @@ export class GetUnpaidJobsDto {
   contractId: number;
 
   @ApiProperty({ example: 'in_progress' })
-  contractStatus: ContractStatus;
+  contractStatus: ContractStatus | string;
 
   @ApiProperty({ example: 'John Doe' })
   clientName: string;
