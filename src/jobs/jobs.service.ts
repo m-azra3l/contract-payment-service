@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Job } from '@prisma/client';
+import { GetUnpaidJobsDto } from './dto/get-unpaid-jobs.dto';
 
 @Injectable()
 export class JobsService {
@@ -61,8 +62,8 @@ export class JobsService {
     });
   }
 
-  async getUnpaidJobs(profileId: number) {
-    return this.prisma.job.findMany({
+  async getUnpaidJobs(profileId: number): Promise<GetUnpaidJobsDto[]> {
+    const jobs = await this.prisma.job.findMany({
       where: {
         isPaid: false,
         contract: {
@@ -70,6 +71,28 @@ export class JobsService {
           OR: [{ clientId: profileId }, { contractorId: profileId }],
         },
       },
+      include: {
+        contract: {
+          include: {
+            client: true,
+            contractor: true,
+          },
+        },
+      },
     });
+
+    return jobs.map((job) => ({
+      id: job.id,
+      uuid: job.uuid,
+      description: job.description,
+      price: job.price,
+      isPaid: job.isPaid,
+      contractId: job.contractId,
+      contractStatus: job.contract.status,
+      clientName: `${job.contract.client.firstName} ${job.contract.client.lastName}`,
+      contractorName: `${job.contract.contractor.firstName} ${job.contract.contractor.lastName}`,
+      createdAt: job.createdAt,
+      updatedAt: job.updatedAt,
+    }));
   }
 }
