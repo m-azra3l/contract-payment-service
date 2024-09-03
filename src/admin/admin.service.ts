@@ -1,40 +1,43 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { BestClientDto } from './dto/best-client.dto';
+
+interface BestProfessionResult {
+  contractorId: number;
+  total: number;
+}
 
 @Injectable()
 export class AdminService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getBestProfession(start: Date, end: Date) {
-    const result = (await this.prisma.job.groupBy({
-      by: ['contractorId'],
-      where: {
-        paidDate: {
-          gte: start,
-          lte: end,
-        },
-      },
-      _sum: {
-        price: true,
-      },
-      orderBy: {
-        _sum: {
-          price: 'desc',
-        },
-      },
-      take: 1,
-    })) as any;
+  // Use raw query due to cyclic error
+  async getBestProfession(start: Date, end: Date): Promise<object> {
+    const result = await this.prisma.$queryRaw<BestProfessionResult[]>`
+      SELECT "contractorId", SUM("price") as total
+      FROM "Job"
+      WHERE "paidDate" BETWEEN ${start} AND ${end}
+      GROUP BY "contractorId"
+      ORDER BY total DESC
+      LIMIT 1
+    `;
 
     if (result.length === 0) return null;
 
     const bestContractor = await this.prisma.profile.findUnique({
-      where: { id: result[0].contractorId },
+      where: { id: result[0]?.contractorId },
     });
 
-    return bestContractor?.profession || null;
+    return {
+      profession: bestContractor?.profession || null,
+    };
   }
 
-  async getBestClients(start: Date, end: Date, limit: number) {
+  async getBestClients(
+    start: Date,
+    end: Date,
+    limit: number,
+  ): Promise<BestClientDto[]> {
     const clientsWithJobSums = await this.prisma.profile.findMany({
       where: {
         role: 'client',
@@ -63,11 +66,16 @@ export class AdminService {
     });
 
     const clientsWithTotalPayments = clientsWithJobSums.map((client) => ({
-      ...client,
+      id: client.id,
+      firstName: client.firstName,
+      lastName: client.lastName,
+      role: client.role,
       totalPaid: client.jobs.reduce(
         (sum, job) => sum + job.price.toNumber(),
         0,
       ),
+      createdAt: client.createdAt,
+      updatedAt: client.updatedAt,
     }));
 
     const sortedClients = clientsWithTotalPayments.sort(
