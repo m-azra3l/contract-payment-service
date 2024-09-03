@@ -51,7 +51,7 @@ describe('JobsController', () => {
         .mockRejectedValue(new NotFoundException());
 
       await expect(controller.payForJob('1', req)).rejects.toThrow(
-        NotFoundException,
+        NotFoundException
       );
     });
 
@@ -62,7 +62,7 @@ describe('JobsController', () => {
         .mockRejectedValue(new ForbiddenException());
 
       await expect(controller.payForJob('1', req)).rejects.toThrow(
-        ForbiddenException,
+        ForbiddenException
       );
     });
   });

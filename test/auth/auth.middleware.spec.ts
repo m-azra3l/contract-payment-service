@@ -44,7 +44,7 @@ describe('AuthMiddleware', () => {
 
     it('should throw UnauthorizedException if profile-id header is missing', async () => {
       await expect(
-        middleware.use(req as Request, res as Response, next),
+        middleware.use(req as Request, res as Response, next)
       ).rejects.toThrow(UnauthorizedException);
       expect(next).not.toHaveBeenCalled();
     });
@@ -54,7 +54,7 @@ describe('AuthMiddleware', () => {
       jest.spyOn(prisma.profile, 'findUnique').mockResolvedValue(null);
 
       await expect(
-        middleware.use(req as Request, res as Response, next),
+        middleware.use(req as Request, res as Response, next)
       ).rejects.toThrow(UnauthorizedException);
       expect(next).not.toHaveBeenCalled();
     });

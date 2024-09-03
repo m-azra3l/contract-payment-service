@@ -25,7 +25,7 @@ describe('ContractsService', () => {
       jest.spyOn(prisma.contract, 'findFirst').mockResolvedValue(null);
 
       await expect(service.getContractById(1, 1)).rejects.toThrow(
-        NotFoundException,
+        NotFoundException
       );
     });
 

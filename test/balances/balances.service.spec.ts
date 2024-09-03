@@ -27,7 +27,7 @@ describe('BalancesService', () => {
         .mockResolvedValue([{ price: 100 }, { price: 200 }] as any); // Outstanding = 300
 
       await expect(service.depositToClient(1, 100)).rejects.toThrow(
-        BadRequestException,
+        BadRequestException
       );
     });
 

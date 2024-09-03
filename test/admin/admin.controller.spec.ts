@@ -27,7 +27,7 @@ describe('AdminController', () => {
 
       const result = await controller.getBestProfession(
         '2024-01-01',
-        '2024-12-31',
+        '2024-12-31'
       );
       expect(result).toBe('Developer');
     });
@@ -46,7 +46,7 @@ describe('AdminController', () => {
       const result = await controller.getBestClients(
         '2024-01-01',
         '2024-12-31',
-        '2',
+        '2'
       );
       expect(result).toEqual(mockClients);
     });
