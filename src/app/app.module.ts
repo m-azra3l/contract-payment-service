@@ -30,7 +30,7 @@ export class AppModule {
     consumer
       .apply(AuthMiddleware)
       .exclude(
-        { path: 'admin', method: RequestMethod.ALL },
+        { path: '/admin(.*)', method: RequestMethod.ALL },
         { path: 'health', method: RequestMethod.GET },
       )
       .forRoutes('*');
