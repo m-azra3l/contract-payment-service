@@ -52,7 +52,7 @@ This application is a **Contract and Payment Service** built with NestJS, Prisma
 
    ```env
    DATABASE_URL="postgresql://username:password@localhost:5432/contract_payment"
-   PORT=3000
+   PORT=5000
    ```
 
 ## Database Setup
