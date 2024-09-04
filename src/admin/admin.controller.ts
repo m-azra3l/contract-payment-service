@@ -11,7 +11,7 @@ import { BestClientDto } from './dto/best-client.dto';
 class BestProfessionDto {
   @ApiProperty({
     description: 'The best profession',
-    example: 'Contractor' || null,
+    example: 'Contractor',
   })
   profession: string | null;
 }

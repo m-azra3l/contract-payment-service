@@ -37,7 +37,7 @@ export class AdminService {
   async getBestClients(
     start: Date,
     end: Date,
-    limit: number,
+    limit: number
   ): Promise<BestClientDto[]> {
     const clientsWithJobSums = await this.prisma.profile.findMany({
       where: {
@@ -73,14 +73,14 @@ export class AdminService {
       role: client.role,
       totalPaid: client.jobs.reduce(
         (sum, job) => sum + job.price.toNumber(),
-        0,
+        0
       ),
       createdAt: client.createdAt,
       updatedAt: client.updatedAt,
     }));
 
     const sortedClients = clientsWithTotalPayments.sort(
-      (a, b) => b.totalPaid - a.totalPaid,
+      (a, b) => b.totalPaid - a.totalPaid
     );
 
     return sortedClients.slice(0, limit);

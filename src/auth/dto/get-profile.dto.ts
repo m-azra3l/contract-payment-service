@@ -21,7 +21,7 @@ export class GetProfileDto {
   @ApiProperty({ example: 1500.0 })
   balance: Decimal;
 
-  @ApiProperty({ example: 'client' || 'contractor' })
+  @ApiProperty({ example: `'client'  'contractor'` })
   role: ProfileRole;
 
   @ApiProperty({ example: '2024-09-02T22:39:24.093Z' })
