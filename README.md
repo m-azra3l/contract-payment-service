@@ -17,7 +17,6 @@ This application is a **Contract and Payment Service** built with NestJS, Prisma
   - [API Documentation](#api-documentation)
   - [Technologies Used](#technologies-used)
   - [Project Structure](#project-structure)
-  - [Reference](#reference)
   - [Author](#author)
   - [License](#license)
 
@@ -222,10 +221,6 @@ contract-payment-service/
 ├── tsconfig.json
 ├── yarn.lock(ignored)
 ```
-
-## Reference
-
-This application was built as part of a coding exercise. For more details on the requirements and design, please refer to the provided document: **[Backend Engineer - Coding Exercise](https://github.com/m-azra3l/contract-payment-service/blob/main/Backend%20Engineer%20-%20%20Coding%20Exercise.pdf)**.
 
 ## Author
 
